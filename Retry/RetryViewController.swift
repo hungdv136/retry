@@ -40,7 +40,6 @@ final class RetryViewController: PopupViewController {
     }
     
     private func dismiss(retry: Bool) {
-        disposeBag = nil
         dismiss(animated: true) {
             if retry {
                 self.retryHandlers.forEach { $0() }
@@ -53,6 +52,6 @@ final class RetryViewController: PopupViewController {
     
     private var retryHandlers = [RetryHandler]()
     private var cancelHandlers = [CancelHandler]()
-    private var disposeBag: DisposeBag! = DisposeBag()
+    private let disposeBag: DisposeBag! = DisposeBag()
 }
 

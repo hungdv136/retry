@@ -13,13 +13,12 @@ import PureLayout
 // MARK: this is a sample retry popup view controller, you can customize your pop up here.
 
 class PopupViewController: UIViewController {
-    deinit {
-        print("PopupViewController")
-    }
+    
     init(autoRetry: Bool) {
         self.autoRetry = autoRetry
         super.init(nibName: nil, bundle: nil)
-        modalPresentationStyle = .overCurrentContext
+        transitioningDelegate = self
+        modalPresentationStyle = .custom
         view.isOpaque = false
     }
     
@@ -29,7 +28,8 @@ class PopupViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.white
+        
+        automaticallyAdjustsScrollViewInsets = false
         
         view.addSubview(wrapperView)
         wrapperView.addSubview(stackView)
@@ -40,8 +40,8 @@ class PopupViewController: UIViewController {
             rx_countDown.map { second -> String in
                 if second == 0 { return " " }
                 let format = second > 1 ?
-                    NSLocalizedString("Try again in %d seconds...", comment: "") :
-                    NSLocalizedString("Try again in %d second...", comment: "")
+                    NSLocalizedString("Try again in...\n%d seconds...", comment: "") :
+                    NSLocalizedString("Try again in...\n%d second...", comment: "")
                 return String(format: format, second)
             }.bindTo(countingLabel.rx.text).addDisposableTo(disposeBag)
         }
@@ -50,7 +50,7 @@ class PopupViewController: UIViewController {
         stackView.addArrangedSubview(cancelButton)
         
         NSLayoutConstraint.autoCreateAndInstallConstraints {
-            wrapperView.autoSetDimensions(to: CGSize(width: 300, height: 220))
+            wrapperView.autoSetDimensions(to: CGSize(width: 200, height: autoRetry ? 250 : 220))
             wrapperView.autoCenterInSuperview()
             stackView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
             
@@ -71,43 +71,50 @@ class PopupViewController: UIViewController {
     
     private lazy var wrapperView: UIView =  {
         let wrapperView = UIView()
-        wrapperView.layer.cornerRadius = 5
-        wrapperView.backgroundColor = UIColor(red: 65 / 255, green: 181 / 255, blue: 196 / 255, alpha: 1)
+        wrapperView.layer.cornerRadius = 8
+        wrapperView.backgroundColor = UIColor.white
         return wrapperView
     }()
     
     private lazy var messageLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.textColor = UIColor.white
-        label.text = NSLocalizedString("Something seems to be wrong.", comment: "")
+        label.textAlignment = .center
+        label.text = self.autoRetry ?
+            NSLocalizedString("We can't execute your request.", comment: "") :
+            NSLocalizedString("Something seems to be wrong with our app. This should be fixed soon.", comment: "")
+        label.textColor = UIColor.gray
         return label
     }()
     
     private lazy var countingLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.white
-        label.text = NSLocalizedString("Try again in 3 seconds...", comment: "")
+        label.text = NSLocalizedString("Try again in...\n3 seconds...", comment: "")
+        label.textColor = UIColor.gray
+        label.textAlignment = .center
+        label.numberOfLines = 0
         return label
     }()
     
     private lazy var retryButton: UIButton = {
         let button = UIButton()
         button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.white.cgColor
+        button.layer.borderColor = self.mainColor.cgColor
         button.layer.cornerRadius = 22
         button.setTitle(NSLocalizedString("Try again now", comment: ""), for: .normal)
+        button.setTitleColor(self.mainColor, for: .normal)
         return button
     }()
     
     private lazy var cancelButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("Dismiss", comment: ""), for: .normal)
-        button.setTitleColor(UIColor.red, for: .normal)
+        button.setTitleColor(UIColor.gray, for: .normal)
         return button
     }()
     
     private var disposeBag: DisposeBag = DisposeBag()
+    private let mainColor = UIColor(red: 65 / 255, green: 181 / 255, blue: 196 / 255, alpha: 1)
     
     // MARK: public properties
     
@@ -124,5 +131,21 @@ class PopupViewController: UIViewController {
     
     var rx_cancel: ControlEvent<Void> {
         return cancelButton.rx.tap
+    }
+}
+
+//MARK: - UIViewControllerTransitioningDelegate
+
+extension PopupViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return PopupPresentationController(presentedViewController: presented, presenting: presenting)
+    }
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return PopupAnimatedTransitioning(isPresentation: true)
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return PopupAnimatedTransitioning(isPresentation: false)
     }
 }

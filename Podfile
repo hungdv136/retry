@@ -1,7 +1,6 @@
 use_frameworks!
 
 target ‘Retry’ do
-    pod 'Alamofire', '~> 4.0'
     pod 'PureLayout'
     pod 'RxSwift', '~> 3.0'
     pod 'RxCocoa', '~> 3.0'
