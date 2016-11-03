@@ -8,7 +8,6 @@
 import RxSwift
 
 protocol RetryDelegate {
-    func handleError(error: Error, retriedCount: Int) -> Observable<Void>
     func retryWhen(attempts: Observable<Error>, filter: ErrorFilter) -> Observable<Void>
 }
 

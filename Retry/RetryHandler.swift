@@ -15,7 +15,17 @@ final class RetryHandler: RetryDelegate {
         let error: Error?
     }
     
-    func handleError(error: Error, retriedCount: Int) -> Observable<Void> {
+    func retryWhen(attempts: Observable<Error>, filter: ErrorFilter) -> Observable<Void> {
+        return attempts.scan(ScanState(count: 0, error: nil)) { (lastState, error) -> ScanState in
+            return ScanState(count: lastState.count + 1, error: error)
+        }.flatMap { state -> Observable<Void> in
+            guard let error = state.error else { return Observable.just()}
+            if !filter.valid(error: error) { throw error }
+            return self.handleError(error: error, retriedCount: state.count)
+        }
+    }
+    
+    private func handleError(error: Error, retriedCount: Int) -> Observable<Void> {
         return Observable.create { observer in
     
             if self.sharedPopupController == nil {
@@ -36,16 +46,6 @@ final class RetryHandler: RetryDelegate {
             self.presentRetryModal()
             
             return Disposables.create()
-        }
-    }
-    
-    func retryWhen(attempts: Observable<Error>, filter: ErrorFilter) -> Observable<Void> {
-        return attempts.scan(ScanState(count: 0, error: nil)) { (lastState, error) -> ScanState in
-            return ScanState(count: lastState.count + 1, error: error)
-        }.flatMap { state -> Observable<Void> in
-            guard let error = state.error else { return Observable.just()}
-            if !filter.valid(error: error) { throw error }
-            return self.handleError(error: error, retriedCount: state.count)
         }
     }
     
