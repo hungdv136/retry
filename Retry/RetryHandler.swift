@@ -8,11 +8,16 @@
 
 import RxSwift
 
-final class RetryHandler: Retriable {
+final class RetryHandler: RetryDelegate {
+    
+    struct ScanState {
+        let count: Int
+        let error: Error?
+    }
     
     func handleError(error: Error, retriedCount: Int) -> Observable<Void> {
         return Observable.create { observer in
-            
+    
             if self.sharedPopupController == nil {
                 self.sharedPopupController = RetryViewController(autoRetry: retriedCount <= 3)
             }
@@ -25,7 +30,7 @@ final class RetryHandler: Retriable {
             
             self.sharedPopupController?.addCancelHandler {
                 self.sharedPopupController = nil
-                observer.onError(RetriableError.dismiss)
+                observer.onError(error)
             }
             
             self.presentRetryModal()
@@ -34,13 +39,13 @@ final class RetryHandler: Retriable {
         }
     }
     
-    func retry(attempts: Observable<Error>) -> Observable<Void> {
-        return attempts.scan(0) { (lastCount, error) -> Int in
-            // depend on your bussiness, you can retry for other errors here
-            guard case RetriableError.retry = error else { throw error }
-            return lastCount + 1
-        }.flatMap { count -> Observable<Void> in
-            return self.handleError(error: RetriableError.retry, retriedCount: count)
+    func retryWhen(attempts: Observable<Error>, filter: ErrorFilter) -> Observable<Void> {
+        return attempts.scan(ScanState(count: 0, error: nil)) { (lastState, error) -> ScanState in
+            return ScanState(count: lastState.count + 1, error: error)
+        }.flatMap { state -> Observable<Void> in
+            guard let error = state.error else { return Observable.just()}
+            if !filter.valid(error: error) { throw error }
+            return self.handleError(error: error, retriedCount: state.count)
         }
     }
     
@@ -54,3 +59,5 @@ final class RetryHandler: Retriable {
     
     private weak var sharedPopupController: RetryViewController?
 }
+
+

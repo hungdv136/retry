@@ -8,20 +8,34 @@
 
 import RxSwift
 
+enum NetworkError: Error {
+    case requestTimeout
+}
+
 final class TestService {
-    init(retryDelegate: Retriable?) {
+    init(retryDelegate: RetryDelegate?) {
         self.retryDelegate = retryDelegate
     }
     
     func createObservable() -> Observable<Void> {
         return Observable.create { o in
             o.onNext()
-            o.onError(RetriableError.retry)
+            o.onError(NetworkError.requestTimeout)
             return Disposables.create()
         }.retryWhen { (attempts: Observable<Error>) -> Observable<Void> in
-            return self.retryDelegate?.retry(attempts: attempts) ?? Observable.error(RetriableError.dismiss)
+            return self.retryDelegate?.retryWhen(attempts: attempts, filter: self.errorFilter) ?? Observable.error(NetworkError.requestTimeout)
         }
     }
     
-    private let retryDelegate: Retriable?
+    private let retryDelegate: RetryDelegate?
+    private let errorFilter = NetworkErrorFilter()
+}
+
+final class NetworkErrorFilter: ErrorFilter {
+    func valid(error: Error) -> Bool {
+        if case NetworkError.requestTimeout = error {
+            return true
+        }
+        return false
+    }
 }

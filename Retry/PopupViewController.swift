@@ -50,7 +50,7 @@ class PopupViewController: UIViewController {
         stackView.addArrangedSubview(cancelButton)
         
         NSLayoutConstraint.autoCreateAndInstallConstraints {
-            wrapperView.autoSetDimensions(to: CGSize(width: 200, height: autoRetry ? 250 : 220))
+            wrapperView.autoSetDimensions(to: CGSize(width: 200, height: 250))
             wrapperView.autoCenterInSuperview()
             stackView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
             

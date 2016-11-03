@@ -13,11 +13,10 @@
 		7C1598621DCAC9AF00F1B241 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C1598601DCAC9AF00F1B241 /* Main.storyboard */; };
 		7C1598641DCAC9AF00F1B241 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C1598631DCAC9AF00F1B241 /* Assets.xcassets */; };
 		7C1598671DCAC9AF00F1B241 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C1598651DCAC9AF00F1B241 /* LaunchScreen.storyboard */; };
-		7C15986F1DCACA0C00F1B241 /* Retriable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C15986E1DCACA0C00F1B241 /* Retriable.swift */; };
+		7C15986F1DCACA0C00F1B241 /* RetryDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C15986E1DCACA0C00F1B241 /* RetryDelegate.swift */; };
 		7C1598711DCAD34500F1B241 /* RetryHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1598701DCAD34500F1B241 /* RetryHandler.swift */; };
 		7C1598741DCAD4B300F1B241 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1598731DCAD4B300F1B241 /* UIViewController.swift */; };
 		7C1598761DCAD5C300F1B241 /* RetryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1598751DCAD5C300F1B241 /* RetryViewController.swift */; };
-		7C6E24BC1DCAE7A2005666FD /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6E24BB1DCAE7A2005666FD /* Errors.swift */; };
 		7C6E24BF1DCAE92C005666FD /* TestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6E24BE1DCAE92C005666FD /* TestService.swift */; };
 		7C6E24C11DCAF5EC005666FD /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6E24C01DCAF5EC005666FD /* PopupViewController.swift */; };
 		7C78A3BA1DCB2216008A6B06 /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C78A3B91DCB2216008A6B06 /* PopupPresentationController.swift */; };
@@ -35,11 +34,10 @@
 		7C1598631DCAC9AF00F1B241 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7C1598661DCAC9AF00F1B241 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7C1598681DCAC9AF00F1B241 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7C15986E1DCACA0C00F1B241 /* Retriable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Retriable.swift; sourceTree = "<group>"; };
+		7C15986E1DCACA0C00F1B241 /* RetryDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RetryDelegate.swift; sourceTree = "<group>"; };
 		7C1598701DCAD34500F1B241 /* RetryHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RetryHandler.swift; sourceTree = "<group>"; };
 		7C1598731DCAD4B300F1B241 /* UIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		7C1598751DCAD5C300F1B241 /* RetryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RetryViewController.swift; sourceTree = "<group>"; };
-		7C6E24BB1DCAE7A2005666FD /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		7C6E24BE1DCAE92C005666FD /* TestService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestService.swift; sourceTree = "<group>"; };
 		7C6E24C01DCAF5EC005666FD /* PopupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		7C78A3B91DCB2216008A6B06 /* PopupPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupPresentationController.swift; sourceTree = "<group>"; };
@@ -88,8 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				7C15985C1DCAC9AF00F1B241 /* AppDelegate.swift */,
-				7C15986E1DCACA0C00F1B241 /* Retriable.swift */,
-				7C6E24BB1DCAE7A2005666FD /* Errors.swift */,
+				7C15986E1DCACA0C00F1B241 /* RetryDelegate.swift */,
 				7C1598701DCAD34500F1B241 /* RetryHandler.swift */,
 				7C1598771DCAD5E400F1B241 /* Views */,
 				7C1598721DCAD48000F1B241 /* Extensions */,
@@ -114,7 +111,6 @@
 			isa = PBXGroup;
 			children = (
 				7C78A3B81DCB21D2008A6B06 /* Popup */,
-				7C1598751DCAD5C300F1B241 /* RetryViewController.swift */,
 				7C15985E1DCAC9AF00F1B241 /* ViewController.swift */,
 			);
 			name = Views;
@@ -131,6 +127,7 @@
 		7C78A3B81DCB21D2008A6B06 /* Popup */ = {
 			isa = PBXGroup;
 			children = (
+				7C1598751DCAD5C300F1B241 /* RetryViewController.swift */,
 				7C6E24C01DCAF5EC005666FD /* PopupViewController.swift */,
 				7C78A3B91DCB2216008A6B06 /* PopupPresentationController.swift */,
 				7C78A3BB1DCB2539008A6B06 /* PopupAnimatedTransitioning.swift */,
@@ -275,12 +272,11 @@
 				7C1598711DCAD34500F1B241 /* RetryHandler.swift in Sources */,
 				7C15985D1DCAC9AF00F1B241 /* AppDelegate.swift in Sources */,
 				7C78A3BA1DCB2216008A6B06 /* PopupPresentationController.swift in Sources */,
-				7C15986F1DCACA0C00F1B241 /* Retriable.swift in Sources */,
+				7C15986F1DCACA0C00F1B241 /* RetryDelegate.swift in Sources */,
 				7C6E24C11DCAF5EC005666FD /* PopupViewController.swift in Sources */,
 				7C6E24BF1DCAE92C005666FD /* TestService.swift in Sources */,
 				7C78A3BC1DCB2539008A6B06 /* PopupAnimatedTransitioning.swift in Sources */,
 				7C1598741DCAD4B300F1B241 /* UIViewController.swift in Sources */,
-				7C6E24BC1DCAE7A2005666FD /* Errors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
