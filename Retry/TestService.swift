@@ -23,7 +23,7 @@ final class TestService {
             o.onError(NetworkError.requestTimeout)
             return Disposables.create()
         }.retryWhen { (attempts: Observable<Error>) -> Observable<Void> in
-            return self.retryDelegate?.retryWhen(attempts: attempts, filter: self.errorFilter) ?? Observable.error(NetworkError.requestTimeout)
+            return self.retryDelegate?.retryWhen(attempts: attempts, filter: self.errorFilter) ?? attempts.map { _ in}
         }
     }
     
